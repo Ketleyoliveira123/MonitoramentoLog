@@ -228,3 +228,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# LogWatch: os logs de exemplo em data/raw/ DEVEM ser versionados
+# (a regra genérica "*.log" acima os ignoraria sem aviso).
+!data/raw/*.log

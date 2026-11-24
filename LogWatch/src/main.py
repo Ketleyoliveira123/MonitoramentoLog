@@ -1,33 +1,27 @@
+from monitoring import DEFAULT_LOG_FILE, run_monitoring
 
-from log_reader import read_log_file
-from log_parser import parse_log_line
-from analyzer import analyze_events
-from alerts import generate_alerts
+# DEFAULT_LOG_FILE é calculado a partir da localização do código (src/ -> LogWatch/data/raw/auth.log),
+# assim o programa funciona independentemente da pasta de onde é executado.
 
-file_path = "data/raw/auth.log"
 
-logs = read_log_file(file_path)
+def main(file_path=DEFAULT_LOG_FILE):
+    # O pipeline (ler -> interpretar -> analisar -> alertar) fica em monitoring.py,
+    # compartilhado com a API, para não haver duas implementações do mesmo fluxo.
+    alerts = run_monitoring(file_path).alerts
 
-events = []
+    print("\n=== ALERTAS DE SEGURANÇA ===")
 
-for log in logs:
-    event = parse_log_line(log)
+    if alerts:
+        for alert in alerts:
+            print(
+                f"[{alert['severity']}] "
+                f"IP: {alert['ip']} - {alert['message']}"
+            )
+    else:
+        print("Nenhuma atividade suspeita identificada.")
 
-    if event:
-        events.append(event)
 
-suspicious_ips = analyze_events(events)
-
-alerts = generate_alerts(suspicious_ips)
-
-print("\n=== ALERTAS DE SEGURANÇA ===")
-
-if alerts:
-    for alert in alerts:
-        print(
-            f"[{alert['severity']}] "
-            f"IP: {alert['ip']} - {alert['message']}"
-        )
-else:
-    print("Nenhuma atividade suspeita identificada.")
-
+# Só executa a análise quando o arquivo é rodado diretamente (python src/main.py),
+# não quando é importado por testes ou pela API.
+if __name__ == "__main__":
+    main()

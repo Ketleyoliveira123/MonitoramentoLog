@@ -1,0 +1,11 @@
+[project]
+name = "logwatch"
+version = "0.1.0"
+description = "Monitoramento e análise de logs de autenticação"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+# Permite que testes e código usem os mesmos imports (ex.: `from analyzer import ...`),
+# independentemente de rodar `pytest` ou `python -m pytest`.
+pythonpath = ["src"]
+testpaths = ["tests"]

@@ -1,7 +1,6 @@
 # Vamos testar o log_parser.py
 
-import pytest
-from src.log_parser import parse_log_line
+from log_parser import parse_log_line
 
 def test_parse_valid_log():
     line = (
